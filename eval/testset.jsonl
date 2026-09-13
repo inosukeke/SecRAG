@@ -1,0 +1,23 @@
+# Bộ test retrieval. Mỗi dòng: {"q": câu hỏi (EN), "relevant": [mảnh title tính là ĐÚNG]}
+# Một chunk được coi là liên quan nếu title CHỨA một trong các mảnh 'relevant'.
+# Để tiếng Anh + không bật query-rewrite -> eval tất định, miễn phí (không gọi Groq).
+{"q": "How to prevent SQL injection?", "relevant": ["SQL_Injection_Prevention", "Query_Parameterization"]}
+{"q": "How to prevent cross-site scripting XSS?", "relevant": ["Cross_Site_Scripting_Prevention", "DOM_based_XSS"]}
+{"q": "What is DOM based XSS?", "relevant": ["DOM_based_XSS"]}
+{"q": "How to store passwords securely with hashing?", "relevant": ["Password_Storage"]}
+{"q": "JWT JSON web token security best practices", "relevant": ["JSON_Web_Token"]}
+{"q": "How to manage user sessions securely?", "relevant": ["Session_Management"]}
+{"q": "How to prevent CSRF cross-site request forgery?", "relevant": ["Cross-Site_Request_Forgery_Prevention"]}
+{"q": "How to prevent server side request forgery SSRF?", "relevant": ["Server_Side_Request_Forgery_Prevention"]}
+{"q": "How to prevent XML external entity XXE injection?", "relevant": ["XML_External_Entity"]}
+{"q": "Secure file upload handling", "relevant": ["File_Upload"]}
+{"q": "Content Security Policy configuration", "relevant": ["Content_Security_Policy"]}
+{"q": "Clickjacking defense techniques", "relevant": ["Clickjacking_Defense"]}
+{"q": "Docker container security hardening", "relevant": ["Docker_Security"]}
+{"q": "REST API security best practices", "relevant": ["REST_Security"]}
+{"q": "Cryptographic key and secret storage", "relevant": ["Cryptographic_Storage", "Key_Management", "Secrets_Management"]}
+{"q": "What is the Pass the Hash technique?", "relevant": ["T1550.002"]}
+{"q": "Phishing attack technique", "relevant": ["T1566", "T1598"]}
+{"q": "OS credential dumping from memory", "relevant": ["T1003"]}
+{"q": "Process injection into another process", "relevant": ["T1055"]}
+{"q": "Command and scripting interpreter execution", "relevant": ["T1059"]}

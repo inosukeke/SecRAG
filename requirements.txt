@@ -1,0 +1,18 @@
+# --- Core RAG ---
+groq>=0.11.0                     # LLM inference (cloud, free tier)
+sentence-transformers>=3.0.0     # Embedding + reranker (local)
+numpy>=1.26.0                    # Vector store tự viết (cosine brute-force)
+rank-bm25>=0.2.2                 # Keyword search cho hybrid (Phase 3)
+# Ghi chú: không dùng Chroma — bản có wheel sẵn (1.x) lỗi đọc lại index trên
+# Windows, bản 0.5.x cần trình biên dịch C++. Vector store NumPy (retrieval/store.py)
+# đủ nhanh cho quy mô này và không phụ thuộc nền tảng.
+
+# --- Utils ---
+python-dotenv>=1.0.0             # Đọc GROQ_API_KEY từ .env
+tqdm>=4.66.0                     # Progress bar khi index
+pydantic>=2.0.0                  # Config có kiểu
+
+# --- API + UI (Phase 4, cài sau cũng được) ---
+fastapi>=0.110.0
+uvicorn>=0.29.0
+streamlit>=1.35.0

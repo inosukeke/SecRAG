@@ -1,0 +1,11 @@
+# Theme sáng, tối giản cho SecRAG
+[theme]
+base = "light"
+primaryColor = "#0d7d84"              # teal — màu nhấn
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f4f7f7"  # nền phụ (sidebar, bubble) hơi xám-xanh
+textColor = "#1b2733"
+font = "sans serif"
+
+[server]
+headless = true
