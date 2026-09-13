@@ -103,16 +103,6 @@ CLI hỗ trợ lọc: `source=attack lateral movement`, `category=web ...`.
 | `generation/` | prompt + Groq client |
 | `app_cli.py` | pipeline end-to-end trên dòng lệnh |
 
-## Roadmap
-
-- [x] **P0–1** Setup + ingest Markdown + index (vector store NumPy)
-- [x] **P2** Retrieve + generate (Groq) + citation
-- [x] **P3** query-rewrite + hybrid + rerank + MMR + lọc metadata + loader ATT&CK
-- [x] **P4** Giao diện web Streamlit: `streamlit run ui/app.py`
-- [x] **P5** Eval retrieval: `python -m eval.run_eval` (Hit@k/MRR, A/B preset)
-
-Tùy chọn còn lại: loader CVE/KEV, eval chất lượng câu trả lời (RAGAS), FastAPI SSE.
-
 ## Nguyên tắc nội dung
 Chỉ dùng để **hiểu bản chất & tra cứu** phục vụ học tập/kiểm thử có phép.
 Không dùng để tấn công hệ thống của người khác.
