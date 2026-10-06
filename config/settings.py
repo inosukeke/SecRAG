@@ -21,9 +21,9 @@ DATA_RAW = ROOT / "data" / "raw"          # tài liệu nguồn (.md) bỏ vào 
 STORE_PATH = ROOT / "data" / "store.pkl"  # vector store (NumPy) sau khi index
 
 # --- Embedding (chạy LOCAL) ---
-# Model đa ngôn ngữ, nhẹ (~470MB), hiểu cả tiếng Việt lẫn tiếng Anh.
-# Muốn chất lượng cao hơn (nặng hơn ~2GB): "BAAI/bge-m3"
-EMBED_MODEL = "paraphrase-multilingual-MiniLM-L12-v2"
+# Model embedding đa ngôn ngữ chất lượng cao (1024-dim, 2024), chạy GPU.
+# Nhẹ hơn cho CPU (kém hơn): "paraphrase-multilingual-MiniLM-L12-v2" (~470MB, 384-dim)
+EMBED_MODEL = "BAAI/bge-m3"   # ~2.2GB, không cần prefix query/passage
 
 # --- Chunking ---
 CHUNK_SIZE = 500          # số "từ" mỗi chunk (xấp xỉ token)

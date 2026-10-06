@@ -9,8 +9,21 @@ import re
 from config import settings
 
 
+_MAX_CODE = 1500   # cắt block code cực dài để đỡ nhiễu, vẫn giữ phần đầu
+
+
+def _keep_code(m: re.Match) -> str:
+    """Giữ nội dung code/payload (quan trọng với corpus pentest), chỉ bỏ fence +
+    nhãn ngôn ngữ. Trước đây thay bằng '[code block]' -> vứt mất payload/lệnh."""
+    body = re.sub(r"^\w*\n", "", m.group(1), count=1)   # bỏ dòng nhãn ngôn ngữ/dòng trống đầu
+    body = body.strip()
+    if len(body) > _MAX_CODE:
+        body = body[:_MAX_CODE]
+    return "\n" + body + "\n"
+
+
 def _clean(text: str) -> str:
-    text = re.sub(r"```.*?```", " [code block] ", text, flags=re.DOTALL)  # bỏ code dài
+    text = re.sub(r"```(.*?)```", _keep_code, text, flags=re.DOTALL)  # GIỮ code/payload
     text = re.sub(r"!\[.*?\]\(.*?\)", "", text)      # bỏ ảnh
     text = re.sub(r"\n{3,}", "\n\n", text)           # gộp dòng trống thừa
     return text.strip()

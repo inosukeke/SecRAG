@@ -1,12 +1,11 @@
 # SecRAG — Kế hoạch triển khai
 
 > Tài liệu tham chiếu cho dự án. Đọc file này để nắm bối cảnh trước khi làm.
-> Cập nhật gần nhất: 2026-09-13. Trạng thái: **Phase 3 đang làm** — retrieval nâng cao
-> (query-rewrite + hybrid + rerank + metadata filter + MMR + **loader ATT&CK**) đã xong &
-> chạy thật trên GPU. Corpus: OWASP + MITRE ATT&CK = **4077 chunk**. **Phase 5 eval XONG**
-> (`eval/run_eval.py`): rerank là cú nhảy lớn nhất, MMR làm giảm nhẹ → đã tắt MMR mặc định.
-> **Phase 4 web UI (Streamlit) XONG** — chat sáng/gọn, lọc + bật/tắt cấu hình trên web,
-> đã test end-to-end. Còn lại (tùy chọn): loader CVE/KEV, eval chất lượng câu trả lời, FastAPI SSE.
+> Cập nhật gần nhất: 2026-10-06. Trạng thái: **P0–P5 xong**. Pipeline đầy đủ
+> (query-rewrite + hybrid + rerank + metadata filter + MMR + loader ATT&CK), web UI Streamlit,
+> eval retrieval — tất cả chạy thật trên GPU. **Nâng cấp embedding → `BAAI/bge-m3`** + chunker
+> giữ code/payload → re-index: Corpus OWASP + MITRE ATT&CK = **4203 chunk**. Eval xác nhận cải
+> thiện (xem Phase 5). Còn lại (tùy chọn): loader CVE/KEV, eval chất lượng câu trả lời, FastAPI SSE.
 
 ## 1. Phạm vi & nguyên tắc
 
@@ -90,7 +89,7 @@ mại hoá cần cân nhắc. Tránh scrape trang có ToS cấm (PortSwigger Aca
 |-----|----------|---------|
 | Ngôn ngữ | Python 3.11+ | Hệ sinh thái RAG mạnh nhất |
 | LLM | **Groq API** — `llama-3.3-70b-versatile` | Cloud, free; nhẹ hơn: `llama-3.1-8b-instant` |
-| Embedding | `paraphrase-multilingual-MiniLM-L12-v2` (local) | ~470MB, hiểu cả tiếng Việt; nâng cấp: `BAAI/bge-m3` |
+| Embedding | **`BAAI/bge-m3`** (local, GPU) | 1024-dim, 2024; nhẹ cho CPU: `paraphrase-multilingual-MiniLM-L12-v2` |
 | Vector store | **NumPy tự viết** (`retrieval/store.py`) | Cosine brute-force; thay Chroma (xem ghi chú dưới) |
 | Keyword search | `rank-bm25` | Cho hybrid (Phase 3) |
 | Reranker | `BAAI/bge-reranker-base` (cross-encoder, local) | Chạy GPU ~1.6s/câu; CPU dùng `ms-marco-MiniLM-L-6-v2` |
@@ -196,18 +195,23 @@ hybrid/rerank/MMR + slider TOP_K ngay trên web. Chạy: `streamlit run ui/app.p
 **Hit@k** và **MRR** cho từng preset (vector / +hybrid / +rerank / +mmr). Không gọi
 Groq → tất định, miễn phí. Chạy: `python -m eval.run_eval`.
 
-Kết quả (TOP_K=5, corpus OWASP+ATT&CK):
+Kết quả trước/sau nâng cấp embedding (TOP_K=5, corpus OWASP+ATT&CK):
 
-| preset | Hit@5 | MRR | s/câu |
-|--------|:----:|:---:|:----:|
-| vector | 0.80 | 0.58 | 0.02 |
-| +hybrid | 0.85 | 0.65 | 0.04 |
-| +rerank | **0.95** | **0.76** | 1.71 |
-| +mmr | 0.90 | 0.74 | 1.75 |
+| preset | MiniLM (cũ) | bge-m3 + giữ code (mới) |
+|--------|:----:|:----:|
+| vector | 0.80 / 0.58 | **0.90 / 0.78** |
+| +hybrid | 0.85 / 0.65 | **1.00 / 0.75** |
+| +rerank | 0.95 / 0.76 | 0.95 / 0.74 |
+| +mmr | 0.90 / 0.74 | 0.95 / 0.73 |
 
-**Kết luận**: hybrid rẻ mà lợi; rerank lợi nhất (đắt 1.7s/câu, chấp nhận trên GPU);
-**MMR làm giảm nhẹ** cho tra cứu factual → nên tắt / tăng `MMR_LAMBDA`, chỉ dùng cho
-câu hỏi mở. (Chưa làm: eval chất lượng câu trả lời kiểu RAGAS — cần nhiều lời gọi LLM.)
+*(Hit@5 / MRR; MMR mặc định đã tắt)*
+
+**Kết luận (đo bằng eval):**
+- Đổi embedding sang **bge-m3** cải thiện truy xuất nền rõ rệt (vector 0.80→0.90, hybrid→1.00).
+- Với bge-m3, **rerank hết tác dụng** (hybrid 1.00 > +rerank 0.95) → có thể tắt để nhanh ~7.5×.
+  Lưu ý testset nhỏ (20 câu), chênh 0.05 ~ nhiễu; cần testset lớn hơn để chốt.
+- MMR vẫn làm giảm nhẹ cho tra cứu factual → giữ tắt.
+- (Chưa làm: eval chất lượng câu trả lời kiểu RAGAS — cần nhiều lời gọi LLM.)
 
 ### [ ] Phase 6 — Hoàn thiện (tùy chọn)
 Query rewriting, lọc theo metadata (vd chỉ CVE năm X), cache, xử lý "không biết",

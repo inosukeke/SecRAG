@@ -71,7 +71,9 @@ curl -L -o data/raw/attack/enterprise-attack.json https://raw.githubusercontent.
 python -m ingestion.indexer
 ```
 
-Lần đầu sẽ tải model embedding (~470MB). Sau đó ghi vector vào `data/store.pkl`.
+Lần đầu sẽ tải model embedding `bge-m3` (~2.2GB, nên có GPU). Sau đó ghi vector vào
+`data/store.pkl`. Máy yếu/không GPU: đổi `EMBED_MODEL` trong `config/settings.py` về
+`paraphrase-multilingual-MiniLM-L12-v2` (~470MB) cho nhẹ.
 
 ## 4. Hỏi đáp
 
