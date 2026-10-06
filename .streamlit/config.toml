@@ -1,11 +1,11 @@
-# Theme sáng, tối giản cho SecRAG
+# Theme "Terminal / Hacker console" cho SecRAG — nền gần đen, accent teal-neon
 [theme]
-base = "light"
-primaryColor = "#0d7d84"              # teal — màu nhấn
-backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f4f7f7"  # nền phụ (sidebar, bubble) hơi xám-xanh
-textColor = "#1b2733"
-font = "sans serif"
+base = "dark"
+primaryColor = "#2ee6d6"              # teal-neon — màu nhấn (giữ chất teal cũ, chói hơn)
+backgroundColor = "#0a0e12"           # nền gần đen
+secondaryBackgroundColor = "#121820"  # nền phụ (sidebar, bubble)
+textColor = "#c9d1d9"                 # xám sáng dịu mắt
+font = "monospace"
 
 [server]
 headless = true
